@@ -1,0 +1,121 @@
+CC  := arm-none-eabi-gcc
+
+# Name of the resulting executable. Will be placed in the BUILD type dependent TARGET_DIR
+EXE := out.elf
+
+# Source files
+SRC := src/main.c \
+       src/syscalls.c \
+       dependencies/cmsis-device-h7rs/Source/Templates/gcc/startup_stm32h7s3xx.s
+
+# Include directories
+INC := dependencies/cmsis-device-h7rs/Include \
+       dependencies/CMSIS_6/CMSIS/Core/Include
+
+LINKER_SCRIPT := dependencies/cmsis-device-h7rs/Source/Templates/gcc/linker/stm32h7s3xx_flash.ld
+
+##### Common compiler flags ########################################################################
+CFLAGS := -mcpu=cortex-m7 -std=gnu11 \
+	  -ffunction-sections -fdata-sections \
+	  -Wall -Wextra -Wpedantic -fstack-usage \
+	  -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb \
+	  --specs=nosys.specs -static
+
+LINKER_FLAGS := --gc-sections
+
+# TODO(MaHa): Extract host/target dependent compiler flags
+
+# Default build type
+BUILD := debug
+
+# Build type specific flags
+CFLAGS.debug         := -g3 -O0
+CFLAGS.release.small := -Oz
+CFLAGS.release.fast  := -O3
+
+# Append build type specific flags
+CFLAGS += $(CFLAGS.$(BUILD))
+
+CFLAGS += $(addprefix -I,$(INC))
+CFLAGS += $(addprefix --for-linker=,$(LINKER_FLAGS))
+
+##### Build up directories and files used in compile steps #########################################
+
+# Transforming specified build settings into their directories, so that the rules below can make
+# good use of them
+BUILD_DIR  := build
+# Seperate build directory for each build type
+TARGET_DIR := $(BUILD_DIR)/$(BUILD)
+TARGET     := $(TARGET_DIR)/$(EXE)
+OBJ_DIR    := $(TARGET_DIR)/objects
+
+# Object files from c SRC files
+C_SRC   := $(filter %.c,$(SRC))
+ASM_SRC := $(filter %.s,$(SRC))
+OBJECTS := $(C_SRC:%.c=%.o) $(ASM_SRC:%.s=%.o)
+# Dependency files created by the compiler (for rebuilds if included header files change)
+DEPS    := $(patsubst %.c,%.d,$(SRC))
+# Put object and dependency files into the targets OBJ_DIR to not clutter the workspace
+OBJECTS := $(addprefix $(OBJ_DIR)/,$(OBJECTS))
+DEPS    := $(addprefix $(OBJ_DIR)/,$(DEPS))
+
+##### Usefull targets ##############################################################################
+
+.PHONY: all
+all: $(TARGET)
+
+.PHONY: help
+help:
+	@echo "Options:"
+	@echo "      BUILD=<option>        Set build type to one of the following options"
+	@echo " (default)  debug           With debug symbols and no optimizations"
+	@echo "            release.small   With -Oz optimizations and no debug symbols"
+	@echo "            release.fast    With -O3 optimizations and no debug symbols"
+	@echo ""
+	@echo " Example: make BUILD=release.small"
+
+.PHONY: clean
+clean:
+	/bin/rm -r $(BUILD_DIR)
+
+
+##### Plumbing targets, required for the actual build ##############################################
+
+$(TARGET): $(OBJECTS) $(LINKER_SCRIPT) | $(TARGET_DIR)
+	@echo "CC '$(notdir $@)', because '$(notdir $?)' changed"
+	@$(CC) $(CFLAGS)  $(OBJECTS) -T$(LINKER_SCRIPT) -o $@
+
+# Create dependencie files, which include make rules that depend on the header files included in the
+# source .c files
+$(OBJ_DIR)/%.o: %.c Makefile | $(OBJ_DIR) $(dir $(OBJECTS))
+	@echo "CC '$(notdir $@)', because '$(notdir $?)' changed"
+	@$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
+
+$(OBJ_DIR)/%.o: %.s Makefile | $(OBJ_DIR) $(dir $(OBJECTS))
+	@echo "CC '$(notdir $@)', because '$?' changed"
+	@$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
+
+# Create required directories
+$(dir $(OBJECTS)):
+	/bin/mkdir -p $@
+$(OBJ_DIR):
+	/bin/mkdir -p $@
+$(TARGET_DIR):
+	/bin/mkdir -p $@
+
+# Include the compiler generated dependency files, which enable rebuilds on header file changes
+-include $(DEPS)
+
+# "../Src/main-datamaskin.c"
+# -DDEBUG -DUSE_PWR_DIRECT_SMPS_SUPPLY -DUSE_NUCLEO_64 -DUSE_HAL_DRIVER -DSTM32H7A3xxQ
+# -c
+# -I../Inc -I../Drivers/STM32H7xx_HAL_Driver/Inc -I../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy
+# -I../Drivers/BSP/STM32H7xx_Nucleo -I../Drivers/CMSIS/Device/ST/STM32H7xx/Include
+# -I../Drivers/CMSIS/Include -I"../dependencies/CMSIS-DSP/Include"
+# -I"../dependencies/CMSIS-DSP/PrivateInclude" -I"dependencies/LVGL"
+#  -O0
+#  -ffunction-sections -fdata-sections -Wall -fstack-usage
+#  -MMD -MP -MF"Src/main-datamaskin.d" -MT"Src/main-datamaskin.o"
+#  --specs=nano.specs
+#  -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb
+#  -o "Src/main-datamaskin.o"
