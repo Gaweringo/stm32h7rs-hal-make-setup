@@ -21,14 +21,18 @@ INC := src \
 LINKER_SCRIPT := dependencies/cmsis-device-h7rs/Source/Templates/gcc/linker/stm32h7s3xx_flash.ld
 
 ##### Common compiler flags ########################################################################
-CFLAGS := -mcpu=cortex-m7 -std=gnu11 \
+CFLAGS := -std=gnu11 \
 	  -ffunction-sections -fdata-sections \
-	  -Wall -Wextra -Wpedantic -fstack-usage \
-	  -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb \
+	  -Wall -Wextra -Wpedantic \
+	  -fstack-usage \
+
+# Target specific options
+CFLAGS += \
+	  -mcpu=cortex-m7 -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb \
 	  --specs=nosys.specs -static --specs=nano.specs -lc -lm -flto \
 	  -DUSE_HAL_DRIVER -DSTM32H7S3xx \
 
-LINKER_FLAGS := --gc-sections
+LINKER_FLAGS := --gc-sections --print-memory-usage \
 
 # TODO(MaHa): Extract host/target dependent compiler flags
 
@@ -69,7 +73,11 @@ DEPS    := $(addprefix $(OBJ_DIR)/,$(DEPS))
 ##### Usefull targets ##############################################################################
 
 .PHONY: all
-all: $(TARGET)
+all: size
+
+.PHONY: size
+size: $(TARGET)
+	arm-none-eabi-size $(TARGET)
 
 .PHONY: help
 help:
@@ -80,10 +88,17 @@ help:
 	@echo "            release.fast    With -O3 optimizations and no debug symbols"
 	@echo ""
 	@echo " Example: make BUILD=release.small"
+	@echo ""
+	@echo "Commands:"
+	@echo "  make flash-stlink         Build and flash using the stlink"
 
 .PHONY: clean
 clean:
 	/bin/rm -r $(BUILD_DIR)
+
+.PHONY: flash-stlink flash-jlink flash-pyocd
+flash-stlink: $(TARGET)
+	STM32_Programmer_CLI --connect port=swd --write $< --go
 
 
 ##### Plumbing targets, required for the actual build ##############################################
