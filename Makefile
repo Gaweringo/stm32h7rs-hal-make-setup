@@ -6,11 +6,17 @@ EXE := out.elf
 # Source files
 SRC := src/main.c \
        src/syscalls.c \
-       dependencies/cmsis-device-h7rs/Source/Templates/gcc/startup_stm32h7s3xx.s
+       dependencies/cmsis-device-h7rs/Source/Templates/system_stm32h7rsxx.c \
+       dependencies/cmsis-device-h7rs/Source/Templates/gcc/startup_stm32h7s3xx.s \
+
+include make-includes/stm32-cube-hal.mk
+SRC += $(addprefix dependencies/stm32h7rsxx_hal_driver/Src/,$(HAL_SRC))
 
 # Include directories
-INC := dependencies/cmsis-device-h7rs/Include \
-       dependencies/CMSIS_6/CMSIS/Core/Include
+INC := src \
+       dependencies/cmsis-device-h7rs/Include \
+       dependencies/CMSIS_6/CMSIS/Core/Include \
+       dependencies/stm32h7rsxx_hal_driver/Inc \
 
 LINKER_SCRIPT := dependencies/cmsis-device-h7rs/Source/Templates/gcc/linker/stm32h7s3xx_flash.ld
 
@@ -19,7 +25,8 @@ CFLAGS := -mcpu=cortex-m7 -std=gnu11 \
 	  -ffunction-sections -fdata-sections \
 	  -Wall -Wextra -Wpedantic -fstack-usage \
 	  -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb \
-	  --specs=nosys.specs -static
+	  --specs=nosys.specs -static --specs=nano.specs -lc -lm -flto \
+	  -DUSE_HAL_DRIVER -DSTM32H7S3xx \
 
 LINKER_FLAGS := --gc-sections
 
@@ -82,21 +89,23 @@ clean:
 ##### Plumbing targets, required for the actual build ##############################################
 
 $(TARGET): $(OBJECTS) $(LINKER_SCRIPT) | $(TARGET_DIR)
-	@echo "CC '$(notdir $@)', because '$(notdir $?)' changed"
+	@echo "Builing target $@"
 	@$(CC) $(CFLAGS)  $(OBJECTS) -T$(LINKER_SCRIPT) -o $@
 
 # Create dependencie files, which include make rules that depend on the header files included in the
 # source .c files
 $(OBJ_DIR)/%.o: %.c Makefile | $(OBJ_DIR) $(dir $(OBJECTS))
-	@echo "CC '$(notdir $@)', because '$(notdir $?)' changed"
+	@echo "CC $<"
 	@$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
 
 $(OBJ_DIR)/%.o: %.s Makefile | $(OBJ_DIR) $(dir $(OBJECTS))
-	@echo "CC '$(notdir $@)', because '$?' changed"
+	@echo "CC $<"
 	@$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
 
 # Create required directories
-$(dir $(OBJECTS)):
+# sort is used here to remove duplicate directories
+OBJ_DIRS := $(sort $(dir $(OBJECTS)))
+$(OBJ_DIRS):
 	/bin/mkdir -p $@
 $(OBJ_DIR):
 	/bin/mkdir -p $@
@@ -105,17 +114,3 @@ $(TARGET_DIR):
 
 # Include the compiler generated dependency files, which enable rebuilds on header file changes
 -include $(DEPS)
-
-# "../Src/main-datamaskin.c"
-# -DDEBUG -DUSE_PWR_DIRECT_SMPS_SUPPLY -DUSE_NUCLEO_64 -DUSE_HAL_DRIVER -DSTM32H7A3xxQ
-# -c
-# -I../Inc -I../Drivers/STM32H7xx_HAL_Driver/Inc -I../Drivers/STM32H7xx_HAL_Driver/Inc/Legacy
-# -I../Drivers/BSP/STM32H7xx_Nucleo -I../Drivers/CMSIS/Device/ST/STM32H7xx/Include
-# -I../Drivers/CMSIS/Include -I"../dependencies/CMSIS-DSP/Include"
-# -I"../dependencies/CMSIS-DSP/PrivateInclude" -I"dependencies/LVGL"
-#  -O0
-#  -ffunction-sections -fdata-sections -Wall -fstack-usage
-#  -MMD -MP -MF"Src/main-datamaskin.d" -MT"Src/main-datamaskin.o"
-#  --specs=nano.specs
-#  -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb
-#  -o "Src/main-datamaskin.o"
