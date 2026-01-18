@@ -42,7 +42,7 @@ extern "C" {
 // #define HAL_CRC_MODULE_ENABLED
 // #define HAL_CRYP_MODULE_ENABLED
 // #define HAL_DCMIPP_MODULE_ENABLED
-// #define HAL_DMA_MODULE_ENABLED
+#define HAL_DMA_MODULE_ENABLED
 // #define HAL_DMA2D_MODULE_ENABLED
 // #define HAL_DTS_MODULE_ENABLED
 // #define HAL_ETH_MODULE_ENABLED
@@ -86,7 +86,7 @@ extern "C" {
 // #define HAL_SPDIFRX_MODULE_ENABLED
 // #define HAL_SPI_MODULE_ENABLED
 // #define HAL_SRAM_MODULE_ENABLED
-// #define HAL_TIM_MODULE_ENABLED
+#define HAL_TIM_MODULE_ENABLED
 // #define HAL_UART_MODULE_ENABLED
 // #define HAL_USART_MODULE_ENABLED
 // #define HAL_WWDG_MODULE_ENABLED
@@ -269,227 +269,227 @@ extern "C" {
   */
 
 #ifdef HAL_RCC_MODULE_ENABLED
-#include "stm32h7rsxx_hal_rcc.h"
+#include "stm32h7rsxx_hal_rcc.h"  // IWYU pragma: export
 #endif /* HAL_RCC_MODULE_ENABLED */
 
 #ifdef HAL_GPIO_MODULE_ENABLED
-#include "stm32h7rsxx_hal_gpio.h"
+#include "stm32h7rsxx_hal_gpio.h" // IWYU pragma: export
 #endif /* HAL_GPIO_MODULE_ENABLED */
 
 #ifdef HAL_DMA_MODULE_ENABLED
-#include "stm32h7rsxx_hal_dma.h"
+#include "stm32h7rsxx_hal_dma.h" // IWYU pragma: export
 #endif /* HAL_DMA_MODULE_ENABLED */
 
 #ifdef HAL_CORTEX_MODULE_ENABLED
-#include "stm32h7rsxx_hal_cortex.h"
+#include "stm32h7rsxx_hal_cortex.h" // IWYU pragma: export
 #endif /* HAL_CORTEX_MODULE_ENABLED */
 
 #ifdef HAL_ADC_MODULE_ENABLED
-#include "stm32h7rsxx_hal_adc.h"
+#include "stm32h7rsxx_hal_adc.h" // IWYU pragma: export
 #endif /* HAL_ADC_MODULE_ENABLED */
 
 #ifdef HAL_CEC_MODULE_ENABLED
-#include "stm32h7rsxx_hal_cec.h"
+#include "stm32h7rsxx_hal_cec.h" // IWYU pragma: export
 #endif /* HAL_CEC_MODULE_ENABLED */
 
 #ifdef HAL_CORDIC_MODULE_ENABLED
-#include "stm32h7rsxx_hal_cordic.h"
+#include "stm32h7rsxx_hal_cordic.h" // IWYU pragma: export
 #endif /* HAL_CORDIC_MODULE_ENABLED */
 
 #ifdef HAL_CRC_MODULE_ENABLED
-#include "stm32h7rsxx_hal_crc.h"
+#include "stm32h7rsxx_hal_crc.h" // IWYU pragma: export
 #endif /* HAL_CRC_MODULE_ENABLED */
 
 #ifdef HAL_CRYP_MODULE_ENABLED
-#include "stm32h7rsxx_hal_cryp.h"
+#include "stm32h7rsxx_hal_cryp.h" // IWYU pragma: export
 #endif /* HAL_CRYP_MODULE_ENABLED */
 
 #ifdef HAL_DCMIPP_MODULE_ENABLED
-#include "stm32h7rsxx_hal_dcmipp.h"
+#include "stm32h7rsxx_hal_dcmipp.h" // IWYU pragma: export
 #endif /* HAL_DCMIPP_MODULE_ENABLED */
 
 #ifdef HAL_DMA2D_MODULE_ENABLED
-#include "stm32h7rsxx_hal_dma2d.h"
+#include "stm32h7rsxx_hal_dma2d.h" // IWYU pragma: export
 #endif /* HAL_DMA2D_MODULE_ENABLED */
 
 #ifdef HAL_DTS_MODULE_ENABLED
-#include "stm32h7rsxx_hal_dts.h"
+#include "stm32h7rsxx_hal_dts.h" // IWYU pragma: export
 #endif /* HAL_DTS_MODULE_ENABLED */
 
 #ifdef HAL_ETH_MODULE_ENABLED
-#include "stm32h7rsxx_hal_eth.h"
+#include "stm32h7rsxx_hal_eth.h" // IWYU pragma: export
 #endif /* HAL_ETH_MODULE_ENABLED */
 
 #ifdef HAL_EXTI_MODULE_ENABLED
-#include "stm32h7rsxx_hal_exti.h"
+#include "stm32h7rsxx_hal_exti.h" // IWYU pragma: export
 #endif /* HAL_EXTI_MODULE_ENABLED */
 
 #ifdef HAL_FDCAN_MODULE_ENABLED
-#include "stm32h7rsxx_hal_fdcan.h"
+#include "stm32h7rsxx_hal_fdcan.h" // IWYU pragma: export
 #endif /* HAL_FDCAN_MODULE_ENABLED */
 
 #ifdef HAL_FLASH_MODULE_ENABLED
-#include "stm32h7rsxx_hal_flash.h"
+#include "stm32h7rsxx_hal_flash.h" // IWYU pragma: export
 #endif /* HAL_FLASH_MODULE_ENABLED */
 
 #ifdef HAL_GFXMMU_MODULE_ENABLED
-#include "stm32h7rsxx_hal_gfxmmu.h"
+#include "stm32h7rsxx_hal_gfxmmu.h" // IWYU pragma: export
 #endif /* HAL_GFXMMU_MODULE_ENABLED */
 
 #ifdef HAL_GFXTIM_MODULE_ENABLED
-#include "stm32h7rsxx_hal_gfxtim.h"
+#include "stm32h7rsxx_hal_gfxtim.h" // IWYU pragma: export
 #endif /* HAL_GFXTIM_MODULE_ENABLED */
 
 #ifdef HAL_GPU2D_MODULE_ENABLED
-#include "stm32h7rsxx_hal_gpu2d.h"
+#include "stm32h7rsxx_hal_gpu2d.h" // IWYU pragma: export
 #endif /* HAL_GPU2D_MODULE_ENABLED */
 
 #ifdef HAL_HASH_MODULE_ENABLED
-#include "stm32h7rsxx_hal_hash.h"
+#include "stm32h7rsxx_hal_hash.h" // IWYU pragma: export
 #endif /* HAL_HASH_MODULE_ENABLED */
 
 #ifdef HAL_HCD_MODULE_ENABLED
-#include "stm32h7rsxx_hal_hcd.h"
+#include "stm32h7rsxx_hal_hcd.h" // IWYU pragma: export
 #endif /* HAL_HCD_MODULE_ENABLED */
 
 #ifdef HAL_I2C_MODULE_ENABLED
-#include "stm32h7rsxx_hal_i2c.h"
+#include "stm32h7rsxx_hal_i2c.h" // IWYU pragma: export
 #endif /* HAL_I2C_MODULE_ENABLED */
 
 #ifdef HAL_I2S_MODULE_ENABLED
-#include "stm32h7rsxx_hal_i2s.h"
+#include "stm32h7rsxx_hal_i2s.h" // IWYU pragma: export
 #endif /* HAL_I2S_MODULE_ENABLED */
 
 #ifdef HAL_I3C_MODULE_ENABLED
-#include "stm32h7rsxx_hal_i3c.h"
+#include "stm32h7rsxx_hal_i3c.h" // IWYU pragma: export
 #endif /* HAL_I3C_MODULE_ENABLED */
 
 #ifdef HAL_ICACHE_MODULE_ENABLED
-#include "stm32h7rsxx_hal_icache.h"
+#include "stm32h7rsxx_hal_icache.h" // IWYU pragma: export
 #endif /* HAL_ICACHE_MODULE_ENABLED */
 
 #ifdef HAL_IRDA_MODULE_ENABLED
-#include "stm32h7rsxx_hal_irda.h"
+#include "stm32h7rsxx_hal_irda.h" // IWYU pragma: export
 #endif /* HAL_IRDA_MODULE_ENABLED */
 
 #ifdef HAL_IWDG_MODULE_ENABLED
-#include "stm32h7rsxx_hal_iwdg.h"
+#include "stm32h7rsxx_hal_iwdg.h" // IWYU pragma: export
 #endif /* HAL_IWDG_MODULE_ENABLED */
 
 #ifdef HAL_JPEG_MODULE_ENABLED
-#include "stm32h7rsxx_hal_jpeg.h"
+#include "stm32h7rsxx_hal_jpeg.h" // IWYU pragma: export
 #endif /* HAL_JPEG_MODULE_ENABLED */
 
 #ifdef HAL_LTDC_MODULE_ENABLED
-#include "stm32h7rsxx_hal_ltdc.h"
+#include "stm32h7rsxx_hal_ltdc.h" // IWYU pragma: export
 #endif /* HAL_LTDC_MODULE_ENABLED */
 
 #ifdef HAL_LPTIM_MODULE_ENABLED
-#include "stm32h7rsxx_hal_lptim.h"
+#include "stm32h7rsxx_hal_lptim.h" // IWYU pragma: export
 #endif /* HAL_LPTIM_MODULE_ENABLED */
 
 #ifdef HAL_MCE_MODULE_ENABLED
-#include "stm32h7rsxx_hal_mce.h"
+#include "stm32h7rsxx_hal_mce.h" // IWYU pragma: export
 #endif /* HAL_MCE_MODULE_ENABLED */
 
 #ifdef HAL_MDF_MODULE_ENABLED
-#include "stm32h7rsxx_hal_mdf.h"
+#include "stm32h7rsxx_hal_mdf.h" // IWYU pragma: export
 #endif /* HAL_MDF_MODULE_ENABLED */
 
 #ifdef HAL_MMC_MODULE_ENABLED
-#include "stm32h7rsxx_hal_mmc.h"
+#include "stm32h7rsxx_hal_mmc.h" // IWYU pragma: export
 #endif /* HAL_MMC_MODULE_ENABLED */
 
 #ifdef HAL_NAND_MODULE_ENABLED
-#include "stm32h7rsxx_hal_nand.h"
+#include "stm32h7rsxx_hal_nand.h" // IWYU pragma: export
 #endif /* HAL_NAND_MODULE_ENABLED */
 
 #ifdef HAL_NOR_MODULE_ENABLED
-#include "stm32h7rsxx_hal_nor.h"
+#include "stm32h7rsxx_hal_nor.h" // IWYU pragma: export
 #endif /* HAL_NOR_MODULE_ENABLED */
 
 #ifdef HAL_PCD_MODULE_ENABLED
-#include "stm32h7rsxx_hal_pcd.h"
+#include "stm32h7rsxx_hal_pcd.h" // IWYU pragma: export
 #endif /* HAL_PCD_MODULE_ENABLED */
 
 #ifdef HAL_PKA_MODULE_ENABLED
-#include "stm32h7rsxx_hal_pka.h"
+#include "stm32h7rsxx_hal_pka.h" // IWYU pragma: export
 #endif /* HAL_PKA_MODULE_ENABLED */
 
 #ifdef HAL_PSSI_MODULE_ENABLED
-#include "stm32h7rsxx_hal_pssi.h"
+#include "stm32h7rsxx_hal_pssi.h" // IWYU pragma: export
 #endif /* HAL_PSSI_MODULE_ENABLED */
 
 #ifdef HAL_PWR_MODULE_ENABLED
-#include "stm32h7rsxx_hal_pwr.h"
+#include "stm32h7rsxx_hal_pwr.h" // IWYU pragma: export
 #endif /* HAL_PWR_MODULE_ENABLED */
 
 #ifdef HAL_RAMECC_MODULE_ENABLED
-#include "stm32h7rsxx_hal_ramecc.h"
+#include "stm32h7rsxx_hal_ramecc.h" // IWYU pragma: export
 #endif /* HAL_RAMECC_MODULE_ENABLED */
 
 #ifdef HAL_RNG_MODULE_ENABLED
-#include "stm32h7rsxx_hal_rng.h"
+#include "stm32h7rsxx_hal_rng.h" // IWYU pragma: export
 #endif /* HAL_RNG_MODULE_ENABLED */
 
 #ifdef HAL_RTC_MODULE_ENABLED
-#include "stm32h7rsxx_hal_rtc.h"
+#include "stm32h7rsxx_hal_rtc.h" // IWYU pragma: export
 #endif /* HAL_RTC_MODULE_ENABLED */
 
 #ifdef HAL_SAI_MODULE_ENABLED
-#include "stm32h7rsxx_hal_sai.h"
+#include "stm32h7rsxx_hal_sai.h" // IWYU pragma: export
 #endif /* HAL_SAI_MODULE_ENABLED */
 
 #ifdef HAL_SD_MODULE_ENABLED
-#include "stm32h7rsxx_hal_sd.h"
+#include "stm32h7rsxx_hal_sd.h" // IWYU pragma: export
 #endif /* HAL_SD_MODULE_ENABLED */
 
 #ifdef HAL_SDIO_MODULE_ENABLED
-#include "stm32h7rsxx_hal_sdio.h"
+#include "stm32h7rsxx_hal_sdio.h" // IWYU pragma: export
 #endif /* HAL_SDIO_MODULE_ENABLED */
 
 #ifdef HAL_SDRAM_MODULE_ENABLED
-#include "stm32h7rsxx_hal_sdram.h"
+#include "stm32h7rsxx_hal_sdram.h" // IWYU pragma: export
 #endif /* HAL_SDRAM_MODULE_ENABLED */
 
 #ifdef HAL_SMARTCARD_MODULE_ENABLED
-#include "stm32h7rsxx_hal_smartcard.h"
+#include "stm32h7rsxx_hal_smartcard.h" // IWYU pragma: export
 #endif /* HAL_SMARTCARD_MODULE_ENABLED */
 
 #ifdef HAL_SMBUS_MODULE_ENABLED
-#include "stm32h7rsxx_hal_smbus.h"
+#include "stm32h7rsxx_hal_smbus.h" // IWYU pragma: export
 #endif /* HAL_SMBUS_MODULE_ENABLED */
 
 #ifdef HAL_SPDIFRX_MODULE_ENABLED
-#include "stm32h7rsxx_hal_spdifrx.h"
+#include "stm32h7rsxx_hal_spdifrx.h" // IWYU pragma: export
 #endif /* HAL_SPDIFRX_MODULE_ENABLED */
 
 #ifdef HAL_SPI_MODULE_ENABLED
-#include "stm32h7rsxx_hal_spi.h"
+#include "stm32h7rsxx_hal_spi.h" // IWYU pragma: export
 #endif /* HAL_SPI_MODULE_ENABLED */
 
 #ifdef HAL_SRAM_MODULE_ENABLED
-#include "stm32h7rsxx_hal_sram.h"
+#include "stm32h7rsxx_hal_sram.h" // IWYU pragma: export
 #endif /* HAL_SRAM_MODULE_ENABLED */
 
 #ifdef HAL_TIM_MODULE_ENABLED
-#include "stm32h7rsxx_hal_tim.h"
+#include "stm32h7rsxx_hal_tim.h" // IWYU pragma: export
 #endif /* HAL_TIM_MODULE_ENABLED */
 
 #ifdef HAL_UART_MODULE_ENABLED
-#include "stm32h7rsxx_hal_uart.h"
+#include "stm32h7rsxx_hal_uart.h" // IWYU pragma: export
 #endif /* HAL_UART_MODULE_ENABLED */
 
 #ifdef HAL_USART_MODULE_ENABLED
-#include "stm32h7rsxx_hal_usart.h"
+#include "stm32h7rsxx_hal_usart.h" // IWYU pragma: export
 #endif /* HAL_USART_MODULE_ENABLED */
 
 #ifdef HAL_WWDG_MODULE_ENABLED
-#include "stm32h7rsxx_hal_wwdg.h"
+#include "stm32h7rsxx_hal_wwdg.h" // IWYU pragma: export
 #endif /* HAL_WWDG_MODULE_ENABLED */
 
 #ifdef HAL_XSPI_MODULE_ENABLED
-#include "stm32h7rsxx_hal_xspi.h"
+#include "stm32h7rsxx_hal_xspi.h" // IWYU pragma: export
 #endif /* HAL_XSPI_MODULE_ENABLED */
 
 /* Exported macro ------------------------------------------------------------*/

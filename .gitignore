@@ -3,3 +3,6 @@ build/
 # clangd
 .cache/
 compile_commands.json
+
+# gdb
+.gdb_history

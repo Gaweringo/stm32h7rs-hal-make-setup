@@ -10,6 +10,7 @@ struct GPIO_Setup {
 
 enum GPIO_Pins {
     USER_BUTTON,
+    USER_LED1,
     USER_LED2,
     USER_LED3,
     GPIO_SETUP_COUNT,

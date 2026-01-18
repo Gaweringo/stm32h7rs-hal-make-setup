@@ -1,3 +1,9 @@
+# Default target
+.PHONY: all
+all: size
+
+####### Settings ###################################################################################
+
 CC  := arm-none-eabi-gcc
 
 # Name of the resulting executable. Will be placed in the BUILD type dependent TARGET_DIR
@@ -8,8 +14,10 @@ SRC := src/main.c \
        src/board.c \
        src/system/stm32h7rsxx_it.c \
        src/system/syscalls.c \
-       dependencies/cmsis-device-h7rs/Source/Templates/system_stm32h7rsxx.c \
-       dependencies/cmsis-device-h7rs/Source/Templates/gcc/startup_stm32h7s3xx.s \
+       src/system/system_stm32h7rsxx.c \
+       src/system/startup_stm32h7s3xx.s \
+       src/system/hal/stm32h7rsxx_hal_timebase_tim.c \
+
 
 # This provides all source files of the STM32CubeHAL in the HAL_SRC variable
 include make-includes/stm32-cube-hal.mk
@@ -22,10 +30,13 @@ INC := src \
        dependencies/CMSIS_6/CMSIS/Core/Include \
        dependencies/stm32h7rsxx_hal_driver/Inc \
 
-LINKER_SCRIPT := dependencies/cmsis-device-h7rs/Source/Templates/gcc/linker/stm32h7s3xx_flash.ld
+LINKER_SCRIPT := src/system/stm32h7s3xx_flash.ld
+
+# ThradX setup
+include make-includes/threadx.mk
 
 ##### Common compiler flags ########################################################################
-CFLAGS := -std=gnu11 \
+CFLAGS += -std=gnu11 \
 	  -ffunction-sections -fdata-sections \
 	  -Wall -Wextra -Wpedantic \
 	  -fstack-usage \
@@ -36,6 +47,7 @@ CFLAGS += \
 	  --specs=nosys.specs -static --specs=nano.specs -lc -lm -flto \
 	  -DUSE_HAL_DRIVER -DSTM32H7S3xx \
 
+# Flags which must be prefixed with --for-liner to be passed to the linker (done automatically)
 LINKER_FLAGS := --gc-sections --print-memory-usage \
 
 # TODO(MaHa): Extract host/target dependent compiler flags
@@ -67,7 +79,8 @@ OBJ_DIR    := $(TARGET_DIR)/objects
 # Object files from c SRC files
 C_SRC   := $(filter %.c,$(SRC))
 ASM_SRC := $(filter %.s,$(SRC))
-OBJECTS := $(C_SRC:%.c=%.o) $(ASM_SRC:%.s=%.o)
+ASMX_SRC := $(filter %.S,$(SRC))
+OBJECTS := $(C_SRC:%.c=%.o) $(ASM_SRC:%.s=%.o) $(ASMX_SRC:%.S=%.o)
 # Dependency files created by the compiler (for rebuilds if included header files change)
 DEPS    := $(patsubst %.c,%.d,$(SRC))
 # Put object and dependency files into the targets OBJ_DIR to not clutter the workspace
@@ -75,9 +88,6 @@ OBJECTS := $(addprefix $(OBJ_DIR)/,$(OBJECTS))
 DEPS    := $(addprefix $(OBJ_DIR)/,$(DEPS))
 
 ##### Usefull targets ##############################################################################
-
-.PHONY: all
-all: size
 
 .PHONY: size
 size: $(TARGET)
@@ -94,10 +104,14 @@ help:
 	@echo " Example: make BUILD=release.small"
 	@echo ""
 	@echo "Commands:"
-	@echo "  make flash-stlink         Build and flash using the stlink"
+	@echo "  make flash-stlink         Build and flash using the stlink 'STM32_Programmer_CLI'"
+	@echo "  make flash-pyocd          Build and flash using pyOCD"
+	@echo "  make size                 Build and show size of resulting binary"
+	@echo "  make build                Build target binary"
+	@echo "  make clean                Delete all build artifacts"
 
 .PHONY: clean
-clean:
+clean::
 	/bin/rm -r $(BUILD_DIR)
 
 .PHONY: flash-stlink flash-jlink flash-pyocd
@@ -107,11 +121,20 @@ flash-stlink: $(TARGET)
 flash-pyocd: $(TARGET)
 	pyocd load $^ --target stm32h7s3l8hxh
 
+.PHONY: build
+build: $(TARGET)
+
+.PHONY: gdb pyocd
+gdb:
+	arm-none-eabi-gdb -x commands.gdb
+pyocd:
+	pyocd cmd --target stm32h7s3l8hxh
+
 ##### Plumbing targets, required for the actual build ##############################################
 
-$(TARGET): $(OBJECTS) $(LINKER_SCRIPT) | $(TARGET_DIR)
+$(TARGET): $(OBJECTS) $(THREADX_LIB) $(LINKER_SCRIPT) | $(TARGET_DIR)
 	@echo "Builing target $@"
-	@$(CC) $(CFLAGS)  $(OBJECTS) -T$(LINKER_SCRIPT) -o $@
+	@$(CC) $(CFLAGS) $(OBJECTS) $(THREADX_LIB) -T$(LINKER_SCRIPT) -o $@
 
 # Create dependencie files, which include make rules that depend on the header files included in the
 # source .c files
@@ -120,6 +143,10 @@ $(OBJ_DIR)/%.o: %.c | $(OBJ_DIR) $(dir $(OBJECTS))
 	@$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
 
 $(OBJ_DIR)/%.o: %.s | $(OBJ_DIR) $(dir $(OBJECTS))
+	@echo "CC $<"
+	@$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
+
+$(OBJ_DIR)/%.o: %.S | $(OBJ_DIR) $(dir $(OBJECTS))
 	@echo "CC $<"
 	@$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
 

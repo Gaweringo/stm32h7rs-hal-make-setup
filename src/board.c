@@ -11,6 +11,16 @@ static struct GPIO_Setup gpio_setup[GPIO_SETUP_COUNT] = {
                 .Speed = GPIO_SPEED_FREQ_LOW,
             },
         },
+    [USER_LED1] =
+        {
+            GPIOD,
+            {
+                .Pin = GPIO_PIN_10,
+                .Mode = GPIO_MODE_OUTPUT_PP,
+                .Pull = GPIO_NOPULL,
+                .Speed = GPIO_SPEED_FREQ_MEDIUM,
+            },
+        },
     [USER_LED2] =
         {
             GPIOD,
@@ -55,12 +65,12 @@ void board_set_pin(enum GPIO_Pins pin, GPIO_PinState state) {
     HAL_GPIO_WritePin(gpio_setup[pin].Port, gpio_setup[pin].Setup.Pin, state);
 }
 
-void SysTick_Handler(void) {
-    HAL_IncTick();
-}
-
+// TODO(MaHa): Maybe call it something like 'give_up' or semething else that signals, that it
+// doesn't 'handle' errors, but just stops everything and gives up
 void error_handler(void) {
+    // TODO(MaHa): Dump state to trace output, same for HardFault or other fault handlers
     __disable_irq();
+    board_set_pin(USER_LED3, GPIO_PIN_SET);
     while (1) {}
 }
 

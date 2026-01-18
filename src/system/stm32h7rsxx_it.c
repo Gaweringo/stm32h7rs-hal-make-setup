@@ -66,12 +66,6 @@ void SVC_Handler(void) {
 void DebugMon_Handler(void) {
 }
 
-/**
- * @brief This function handles Pendable request for system service.
- */
-void PendSV_Handler(void) {
-}
-
 /******************************************************************************/
 /* STM32H7RSxx Peripheral Interrupt Handlers                                    */
 /* Add here the Interrupt Handlers for the used peripherals.                  */
