@@ -5,15 +5,19 @@ EXE := out.elf
 
 # Source files
 SRC := src/main.c \
-       src/syscalls.c \
+       src/board.c \
+       src/system/stm32h7rsxx_it.c \
+       src/system/syscalls.c \
        dependencies/cmsis-device-h7rs/Source/Templates/system_stm32h7rsxx.c \
        dependencies/cmsis-device-h7rs/Source/Templates/gcc/startup_stm32h7s3xx.s \
 
+# This provides all source files of the STM32CubeHAL in the HAL_SRC variable
 include make-includes/stm32-cube-hal.mk
 SRC += $(addprefix dependencies/stm32h7rsxx_hal_driver/Src/,$(HAL_SRC))
 
 # Include directories
 INC := src \
+       src/system \
        dependencies/cmsis-device-h7rs/Include \
        dependencies/CMSIS_6/CMSIS/Core/Include \
        dependencies/stm32h7rsxx_hal_driver/Inc \
@@ -40,7 +44,7 @@ LINKER_FLAGS := --gc-sections --print-memory-usage \
 BUILD := debug
 
 # Build type specific flags
-CFLAGS.debug         := -g3 -O0
+CFLAGS.debug         := -g3 -ggdb -O0
 CFLAGS.release.small := -Oz
 CFLAGS.release.fast  := -O3
 
@@ -100,6 +104,8 @@ clean:
 flash-stlink: $(TARGET)
 	STM32_Programmer_CLI --connect port=swd --write $< --go
 
+flash-pyocd: $(TARGET)
+	pyocd load $^ --target stm32h7s3l8hxh
 
 ##### Plumbing targets, required for the actual build ##############################################
 
@@ -109,11 +115,11 @@ $(TARGET): $(OBJECTS) $(LINKER_SCRIPT) | $(TARGET_DIR)
 
 # Create dependencie files, which include make rules that depend on the header files included in the
 # source .c files
-$(OBJ_DIR)/%.o: %.c Makefile | $(OBJ_DIR) $(dir $(OBJECTS))
+$(OBJ_DIR)/%.o: %.c | $(OBJ_DIR) $(dir $(OBJECTS))
 	@echo "CC $<"
 	@$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
 
-$(OBJ_DIR)/%.o: %.s Makefile | $(OBJ_DIR) $(dir $(OBJECTS))
+$(OBJ_DIR)/%.o: %.s | $(OBJ_DIR) $(dir $(OBJECTS))
 	@echo "CC $<"
 	@$(CC) $(CFLAGS) -MMD -MP -c $< -o $@
 

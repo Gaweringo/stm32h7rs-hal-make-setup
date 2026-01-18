@@ -1,0 +1,44 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "cwd": "${workspaceFolder}",
+            "executable": "build/debug/out.elf",
+            "name": "Debug with pyOCD",
+            "request": "launch",
+            "type": "cortex-debug",
+            "runToEntryPoint": "main",
+            "showDevDebugOutput": "raw",
+            "servertype": "pyocd",
+            "overrideGDBServerStartedRegex": "GDB server listening on port"
+        },
+        {
+            "cwd": "${workspaceFolder}",
+            "executable": "build/debug/out.elf",
+            "name": "Debug with external pyOCD",
+            "request": "launch",
+            "type": "cortex-debug",
+            "runToEntryPoint": "main",
+            "showDevDebugOutput": "none",
+            "servertype": "external",
+            "gdbTarget": "localhost:3333"
+        },
+        {
+            "cwd": "${workspaceFolder}",
+            "executable": "build/debug/out.elf",
+            "name": "Debug with ST-Link",
+            "request": "launch",
+            "type": "cortex-debug",
+            "runToEntryPoint": "main",
+            "showDevDebugOutput": "none",
+            "servertype": "stlink",
+            "svdPath": "Keil::STM32H7RSxx_DFP@1.1.0",
+            "deviceName": "STM32H7S3L8Hx",
+            // "serverArgs": ["-m", "1"],
+            "targetProcessor": 1
+        }
+    ]
+}
