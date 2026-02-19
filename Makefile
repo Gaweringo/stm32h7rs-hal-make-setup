@@ -2,6 +2,9 @@
 .PHONY: all
 all: size
 
+# Parallel build by default
+MAKEFLAGS += -j$(nproc)
+
 ####### Settings ###################################################################################
 
 CC  := arm-none-eabi-gcc
@@ -57,8 +60,10 @@ BUILD := debug
 
 # Build type specific flags
 CFLAGS.debug         := -g3 -ggdb -O0
-CFLAGS.release.small := -Oz
-CFLAGS.release.fast  := -O3
+CFLAGS.debug.small   := -g3 -ggdb -Os
+CFLAGS.debug.fast    := -g3 -ggdb -O2
+CFLAGS.release.small := -Os
+CFLAGS.release.fast  := -O2
 
 # Append build type specific flags
 CFLAGS += $(CFLAGS.$(BUILD))
@@ -98,8 +103,10 @@ help:
 	@echo "Options:"
 	@echo "      BUILD=<option>        Set build type to one of the following options"
 	@echo " (default)  debug           With debug symbols and no optimizations"
-	@echo "            release.small   With -Oz optimizations and no debug symbols"
-	@echo "            release.fast    With -O3 optimizations and no debug symbols"
+	@echo "            debug.small     With -Os optimizations and debug symbols"
+	@echo "            debug.fast      With -O2 optimizations and debug symbols"
+	@echo "            release.small   With -Os optimizations and no debug symbols"
+	@echo "            release.fast    With -O2 optimizations and no debug symbols"
 	@echo ""
 	@echo " Example: make BUILD=release.small"
 	@echo ""
@@ -126,9 +133,10 @@ build: $(TARGET)
 
 .PHONY: gdb pyocd
 gdb:
-	arm-none-eabi-gdb -x commands.gdb
+	arm-none-eabi-gdb $(TARGET) -x commands.gdb
+
 pyocd:
-	pyocd cmd --target stm32h7s3l8hxh
+	pyocd cmd --target stm32h7s3l8hxh --elf $(TARGET)
 
 ##### Plumbing targets, required for the actual build ##############################################
 
