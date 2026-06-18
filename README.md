@@ -25,3 +25,7 @@ make flash-pyocd
 ```
 (requires `pyocd pack install stm32h7s3l8Hx`)
 
+For a list of available make commands run
+```bash
+make help
+```
