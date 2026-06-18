@@ -119,7 +119,7 @@ help:
 
 .PHONY: clean
 clean::
-	/bin/rm -r $(BUILD_DIR)
+	/bin/rm -rf $(BUILD_DIR)
 
 .PHONY: flash-stlink flash-jlink flash-pyocd
 flash-stlink: $(TARGET)

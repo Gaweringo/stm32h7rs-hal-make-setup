@@ -22,6 +22,9 @@ THREADX_FLAGS.release.fast  := -DCMAKE_BUILD_TYPE=Release
 
 # ThreadX
 $(THREADX_BUILD_DIR): $(THREADX_TX_USER)
+	# Apply patch, if not already applied
+	! git -C $(THREADX_DIR) diff --quiet cmake/cortex_m7.cmake \
+		|| git -C $(THREADX_DIR) apply ../../make-includes/threadx_cortex_m7.patch
 	cmake -S $(THREADX_DIR) -B $(THREADX_BUILD_DIR) -G Ninja \
 		--toolchain=cmake/cortex_m7.cmake \
 		$(THREADX_FLAGS.$(BUILD)) \
@@ -31,4 +34,4 @@ $(THREADX_LIB): $(THREADX_TX_USER) | $(THREADX_BUILD_DIR)
 	cmake --build $(THREADX_BUILD_DIR)
 
 clean::
-	/bin/rm -r $(THREADX_BUILD_DIR)
+	/bin/rm -rf $(THREADX_BUILD_DIR)

@@ -1,0 +1,13 @@
+diff --git a/cmake/cortex_m7.cmake b/cmake/cortex_m7.cmake
+index c4e48fa4..95195809 100644
+--- a/cmake/cortex_m7.cmake
++++ b/cmake/cortex_m7.cmake
+@@ -6,7 +6,7 @@ set(THREADX_ARCH "cortex_m7")
+ set(THREADX_TOOLCHAIN "gnu")
+
+ set(MCPU_FLAGS "-mthumb -mcpu=cortex-m7")
+-set(VFP_FLAGS "")
++set(VFP_FLAGS "-mfloat-abi=hard -mfpu=fpv5-d16")
+ set(SPEC_FLAGS "--specs=nosys.specs")
+ # set(LD_FLAGS "-nostartfiles")
+
