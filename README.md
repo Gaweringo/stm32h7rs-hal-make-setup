@@ -1,4 +1,14 @@
 # Setup
+## Requirements
+
+- Ninja
+- CMake
+- Make
+- arm-none-eabi-gcc
+- pyOCD
+- STM32_Programmer_CLI (optional)
+
+## Build
 To get the required dependencies firt run
 ```
 git submodule update --init --recursive
@@ -15,7 +25,3 @@ make flash-pyocd
 ```
 (requires `pyocd pack install stm32h7s3l8Hx`)
 
-# Requirements
-## Arch / Linux
-- `arm-none-eabi-gcc`
-- `arm-none-eabi-newlib`
